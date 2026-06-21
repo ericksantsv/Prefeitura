@@ -37,7 +37,7 @@ Este arquivo armazena as credenciais confidenciais de acesso ao banco de dados S
 ### Exemplo
 
 ```env
-DATABASE_URL="postgresql://postgres:PWKmlnqeFQV5c5Pq@db.exitxdezymeqhaylohha.supabase.co:5432/postgres"
+DATABASE_URL="postgresql://postgres:Sua_Senha@db.exitxdezymeqhaylohha.supabase.co:5432/postgres"
 ```
 
 > **Observação:** Certifique-se de que a senha não possua caracteres reservados de URL sem conversão, como `?`. Caso utilize, substitua por `%3F` ou utilize uma senha composta apenas por caracteres alfanuméricos.
