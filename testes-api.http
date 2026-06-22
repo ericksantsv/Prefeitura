@@ -1,0 +1,151 @@
+### Arquivo de testes da API — Resolve Aí
+### Como usar: instale a extensão "REST Client" (Huachao Mao) ou "Thunder Client" no VS Code.
+### Com REST Client: clique em "Send Request" que aparece acima de cada bloco "###".
+### Troque {{userId}} e {{alertId}} pelos ids reais que o banco retornar nos testes anteriores.
+
+@baseUrl = http://localhost:3333
+
+### 1. Testar se a API está no ar
+GET {{baseUrl}}/
+
+
+### 2. Cadastrar um usuário novo
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "name": "Maria Teste",
+  "email": "maria.teste@exemplo.com",
+  "password": "senha123"
+}
+
+
+### 3. Tentar cadastrar o mesmo e-mail de novo (deve dar erro 409)
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "name": "Maria Teste",
+  "email": "maria.teste@exemplo.com",
+  "password": "senha123"
+}
+
+
+### 4. Login com o usuário criado
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "maria.teste@exemplo.com",
+  "password": "senha123"
+}
+
+
+### 5. Login com senha errada (deve dar 401)
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "maria.teste@exemplo.com",
+  "password": "senhaerrada"
+}
+
+
+### 6. Buscar usuário por id (troque pelo id real retornado no passo 2)
+GET {{baseUrl}}/users/COLE_O_ID_AQUI
+
+
+### 7. Listar todos os alertas (deve retornar array vazio [] no início)
+GET {{baseUrl}}/alerts
+
+
+### 8. Criar um alerta SEM foto (apenas para teste rápido via JSON)
+### Atenção: a rota real espera multipart/form-data por causa da foto.
+### Para teste simples sem foto, comente a parte de leitura de "file" no server.ts
+### ou use o teste 9 abaixo, que já simula multipart corretamente.
+
+
+### 9. Criar um alerta COM foto (multipart/form-data)
+### Troque COLE_O_ID_AQUI pelo id do usuário criado no passo 2.
+### Troque o caminho da imagem para um arquivo que exista no seu computador.
+POST {{baseUrl}}/alerts
+Content-Type: multipart/form-data; boundary=----testeboundary
+
+------testeboundary
+Content-Disposition: form-data; name="title"
+
+Buraco na rua
+------testeboundary
+Content-Disposition: form-data; name="description"
+
+Buraco grande na esquina, risco para carros e motos
+------testeboundary
+Content-Disposition: form-data; name="category"
+
+Asfalto
+------testeboundary
+Content-Disposition: form-data; name="latitude"
+
+-19.7483
+------testeboundary
+Content-Disposition: form-data; name="longitude"
+
+-47.9319
+------testeboundary
+Content-Disposition: form-data; name="userId"
+
+2e839110-f425-4032-804b-b4956203a2f9
+------testeboundary
+Content-Disposition: form-data; name="photo"; filename="teste.jpg"
+Content-Type: image/jpeg
+
+< ./teste.jpg
+------testeboundary--
+
+
+### 10. Buscar um alerta específico (troque pelo id retornado no passo 9)
+GET {{baseUrl}}/alerts/28098d3c-f270-4b40-bd9d-ca9977d14ab7
+
+
+### 11. Atualizar um alerta (PUT)
+PUT {{baseUrl}}/alerts/28098d3c-f270-4b40-bd9d-ca9977d14ab7
+Content-Type: application/json
+
+{
+  "title": "Buraco na rua (atualizado)",
+  "description": "Descrição revisada após reavaliação"
+}
+
+
+### 12. Atualizar somente o status do alerta
+PATCH {{baseUrl}}/alerts/28098d3c-f270-4b40-bd9d-ca9977d14ab7/status
+Content-Type: application/json
+
+{
+  "status": "APPROVED"
+}
+
+
+### 13. Testar status inválido (deve dar 400)
+PATCH {{baseUrl}}/alerts/28098d3c-f270-4b40-bd9d-ca9977d14ab7/status
+Content-Type: application/json
+
+{
+  "status": "QUALQUER_COISA"
+}
+
+
+### 14. Filtrar alertas por status
+GET {{baseUrl}}/alerts?status=APPROVED
+
+
+### 15. Filtrar alertas por categoria
+GET {{baseUrl}}/alerts?category=Asfalto
+
+
+### 16. Deletar um alerta
+DELETE {{baseUrl}}/alerts/28098d3c-f270-4b40-bd9d-ca9977d14ab7
+
+
+### 17. Buscar alerta deletado (deve dar 404)
+GET {{baseUrl}}/alerts/28098d3c-f270-4b40-bd9d-ca9977d14ab7
