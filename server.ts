@@ -113,8 +113,7 @@ fastify.post('/alerts', async (request, reply) => {
         if (uploadError) {
           fastify.log.error(uploadError)
           return reply.status(500).send({
-            error: 'Erro ao enviar foto para o Storage',
-            detail: uploadError.message,
+            error: 'Erro ao enviar foto para o Storage'
           })
         }
 
@@ -251,8 +250,7 @@ fastify.post('/alerts/:id/photos', async (request, reply) => {
       if (uploadError) {
         fastify.log.error(uploadError)
         return reply.status(500).send({
-          error: 'Erro ao enviar foto para o Storage',
-          detail: uploadError.message,
+          error: 'Erro ao enviar foto para o Storage'
         })
       }
 
