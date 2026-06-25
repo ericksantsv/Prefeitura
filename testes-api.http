@@ -3,19 +3,20 @@
 ### Com REST Client: clique em "Send Request" que aparece acima de cada bloco "###".
 ### Troque {{userId}} e {{alertId}} pelos ids reais que o banco retornar nos testes anteriores.
 
-@baseUrl = http://localhost:3333
+@baseUrl = https://api-resolve-ai.onrender.com
 
 ### 1. Testar se a API está no ar
 GET {{baseUrl}}/
 
 
 ### 2. Cadastrar um usuário novo
+# @name createUser
 POST {{baseUrl}}/users
 Content-Type: application/json
 
 {
   "name": "Maria Teste",
-  "email": "maria.teste@exemplo.com",
+  "email": "maria.teste3@exemplo.com",
   "password": "senha123"
 }
 
@@ -26,7 +27,7 @@ Content-Type: application/json
 
 {
   "name": "Maria Teste",
-  "email": "maria.teste@exemplo.com",
+  "email": "maria.teste3@exemplo.com",
   "password": "senha123"
 }
 
@@ -36,7 +37,7 @@ POST {{baseUrl}}/login
 Content-Type: application/json
 
 {
-  "email": "maria.teste@exemplo.com",
+  "email": "maria.teste3@exemplo.com",
   "password": "senha123"
 }
 
@@ -46,16 +47,16 @@ POST {{baseUrl}}/login
 Content-Type: application/json
 
 {
-  "email": "maria.teste@exemplo.com",
+  "email": "maria.teste3@exemplo.com",
   "password": "senhaerrada"
 }
 
 
-### 6. Buscar usuário por id (troque pelo id real retornado no passo 2)
-GET {{baseUrl}}/users/COLE_O_ID_AQUI
+### 6. Buscar usuário por id (busca o id retornado no passo 2 - precisa ter criado um usuário antes)
+GET {{baseUrl}}/users/{{createUser.response.body.$.id}}
 
 
-### 7. Listar todos os alertas (deve retornar array vazio [] no início)
+### 7. Listar todos os alertas 
 GET {{baseUrl}}/alerts
 
 
@@ -66,8 +67,7 @@ GET {{baseUrl}}/alerts
 
 
 ### 9. Criar um alerta COM foto (multipart/form-data)
-### Troque COLE_O_ID_AQUI pelo id do usuário criado no passo 2.
-### Troque o caminho da imagem para um arquivo que exista no seu computador.
+# @name createAlert
 POST {{baseUrl}}/alerts
 Content-Type: multipart/form-data; boundary=----testeboundary
 
@@ -94,7 +94,7 @@ Content-Disposition: form-data; name="longitude"
 ------testeboundary
 Content-Disposition: form-data; name="userId"
 
-2e839110-f425-4032-804b-b4956203a2f9
+{{createUser.response.body.$.id}}
 ------testeboundary
 Content-Disposition: form-data; name="photo"; filename="teste.jpg"
 Content-Type: image/jpeg
@@ -104,12 +104,10 @@ Content-Type: image/jpeg
 
 
 ### 10. Buscar um alerta específico (troque pelo id retornado no passo 9)
-GET {{baseUrl}}/alerts/28098d3c-f270-4b40-bd9d-ca9977d14ab7
-
+GET {{baseUrl}}/alerts/{{createAlert.response.body.$.id}}
 
 ### 11. Atualizar um alerta (PUT)
-PUT {{baseUrl}}/alerts/28098d3c-f270-4b40-bd9d-ca9977d14ab7
-Content-Type: application/json
+PUT {{baseUrl}}/alerts/{{createAlert.response.body.$.id}}Content-Type: application/json
 
 {
   "title": "Buraco na rua (atualizado)",
@@ -118,7 +116,7 @@ Content-Type: application/json
 
 
 ### 12. Atualizar somente o status do alerta
-PATCH {{baseUrl}}/alerts/28098d3c-f270-4b40-bd9d-ca9977d14ab7/status
+PATCH {{baseUrl}}/alerts/{{createAlert.response.body.$.id}}/status
 Content-Type: application/json
 
 {
@@ -127,7 +125,7 @@ Content-Type: application/json
 
 
 ### 13. Testar status inválido (deve dar 400)
-PATCH {{baseUrl}}/alerts/28098d3c-f270-4b40-bd9d-ca9977d14ab7/status
+PATCH {{baseUrl}}/alerts/{{createAlert.response.body.$.id}}/status
 Content-Type: application/json
 
 {
@@ -144,8 +142,8 @@ GET {{baseUrl}}/alerts?category=Asfalto
 
 
 ### 16. Deletar um alerta
-DELETE {{baseUrl}}/alerts/28098d3c-f270-4b40-bd9d-ca9977d14ab7
+DELETE {{baseUrl}}/alerts/{{createAlert.response.body.$.id}}
 
 
 ### 17. Buscar alerta deletado (deve dar 404)
-GET {{baseUrl}}/alerts/28098d3c-f270-4b40-bd9d-ca9977d14ab7
+GET {{baseUrl}}/alerts/{{createAlert.response.body.$.id}}
