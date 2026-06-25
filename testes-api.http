@@ -16,7 +16,7 @@ Content-Type: application/json
 
 {
   "name": "Maria Teste",
-  "email": "maria.teste6@exemplo.com",
+  "email": "maria.teste7@exemplo.com",
   "password": "senha123"
 }
 
@@ -27,7 +27,7 @@ Content-Type: application/json
 
 {
   "name": "Maria Teste",
-  "email": "maria.teste3@exemplo.com",
+  "email": "maria.teste7@exemplo.com",
   "password": "senha123"
 }
 
@@ -37,7 +37,7 @@ POST {{baseUrl}}/login
 Content-Type: application/json
 
 {
-  "email": "maria.teste3@exemplo.com",
+  "email": "maria.teste7@exemplo.com",
   "password": "senha123"
 }
 
@@ -47,7 +47,7 @@ POST {{baseUrl}}/login
 Content-Type: application/json
 
 {
-  "email": "maria.teste3@exemplo.com",
+  "email": "maria.teste7@exemplo.com",
   "password": "senhaerrada"
 }
 
@@ -74,15 +74,15 @@ Content-Type: multipart/form-data; boundary=----testeboundary
 ------testeboundary
 Content-Disposition: form-data; name="title"
 
-Buraco na rua
+Arvore caida na rua
 ------testeboundary
 Content-Disposition: form-data; name="description"
 
-Buraco grande na esquina, risco para carros e motos
+Arvore grande caida no meio da rua, risco para pedestres e veículos
 ------testeboundary
 Content-Disposition: form-data; name="category"
 
-Asfalto
+Passeio
 ------testeboundary
 Content-Disposition: form-data; name="latitude"
 
@@ -99,7 +99,7 @@ Content-Disposition: form-data; name="userId"
 Content-Disposition: form-data; name="photo"; filename="teste.jpg"
 Content-Type: image/jpeg
 
-< ./teste.jpg
+< ./arvoreCaida1.jpg
 ------testeboundary--
 
 
@@ -107,10 +107,11 @@ Content-Type: image/jpeg
 GET {{baseUrl}}/alerts/{{createAlert.response.body.$.id}}
 
 ### 11. Atualizar um alerta (PUT)
-PUT {{baseUrl}}/alerts/{{createAlert.response.body.$.id}}Content-Type: application/json
+PUT {{baseUrl}}/alerts/{{createAlert.response.body.$.id}}
+Content-Type: application/json
 
 {
-  "title": "Buraco na rua (atualizado)",
+  "title": "Arvore caida na rua (atualizado)",
   "description": "Descrição revisada após reavaliação"
 }
 
@@ -124,7 +125,15 @@ Content-Type: application/json
 }
 
 
-### 13. Testar status inválido (deve dar 400)
+# ### 13. Testar status inválido (deve dar 400)
+# PATCH {{baseUrl}}/alerts/{{createAlert.response.body.$.id}}/status
+# Content-Type: application/json
+
+# {
+#   "status": "APPROVED"
+# }
+
+### 13.1. Testar status inválido (deve dar 400)
 PATCH {{baseUrl}}/alerts/{{createAlert.response.body.$.id}}/status
 Content-Type: application/json
 
@@ -132,13 +141,12 @@ Content-Type: application/json
   "status": "QUALQUER_COISA"
 }
 
-
 ### 14. Filtrar alertas por status
 GET {{baseUrl}}/alerts?status=APPROVED
 
 
 ### 15. Filtrar alertas por categoria
-GET {{baseUrl}}/alerts?category=Asfalto
+GET {{baseUrl}}/alerts?category=Passeio
 
 
 ### 16. Deletar um alerta
