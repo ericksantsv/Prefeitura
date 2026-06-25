@@ -12,7 +12,11 @@ import { randomUUID } from 'crypto'
 const fastify = Fastify({ logger: true })
 
 // Permite que as rotas recebam multipart/form-data (upload de arquivos)
-fastify.register(multipart)
+fastify.register(multipart, {
+  limits: {
+    fileSize: 10 * 1024 * 1024,
+  }
+})
 
 // Cliente do Supabase Storage (usa a Service Role Key, que tem permissão de escrita)
 // IMPORTANTE: SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY devem estar no .env
