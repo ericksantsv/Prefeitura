@@ -18,6 +18,9 @@ fastify.register(multipart)
 // IMPORTANTE: SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY devem estar no .env
 // Como só usamos Storage (não Realtime), desativamos o módulo de realtime
 // e passamos o pacote "ws" para evitar o erro de WebSocket no Node 20.
+console.log('SUPABASE_URL existe?', !!process.env.SUPABASE_URL)
+console.log('SUPABASE_SERVICE_ROLE_KEY existe?', !!process.env.SUPABASE_SERVICE_ROLE_KEY)
+
 const supabase = createClient(
   process.env.SUPABASE_URL as string,
   process.env.SUPABASE_SERVICE_ROLE_KEY as string,
@@ -109,7 +112,10 @@ fastify.post('/alerts', async (request, reply) => {
 
         if (uploadError) {
           fastify.log.error(uploadError)
-          return reply.status(500).send({ error: 'Erro ao enviar foto para o Storage' })
+          return reply.status(500).send({
+            error: 'Erro ao enviar foto para o Storage',
+            detail: uploadError.message,
+          })
         }
 
         const { data: publicUrlData } = supabase.storage
@@ -244,7 +250,10 @@ fastify.post('/alerts/:id/photos', async (request, reply) => {
 
       if (uploadError) {
         fastify.log.error(uploadError)
-        return reply.status(500).send({ error: 'Erro ao enviar foto para o Storage' })
+        return reply.status(500).send({
+          error: 'Erro ao enviar foto para o Storage',
+          detail: uploadError.message,
+        })
       }
 
       const { data: publicUrlData } = supabase.storage
